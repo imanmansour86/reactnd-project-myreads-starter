@@ -10,7 +10,6 @@ class Search extends Component {
     }
 
     updateQuery = (query) => {
-
         this.setState(() => ({
             query: query.trim()
         }))
@@ -21,8 +20,8 @@ class Search extends Component {
         BooksAPI.search(query)
             .then(
                 (searchResults) => {
+                    console.log(searchResults)
                     if (searchResults !== undefined && searchResults.error !== "empty query") {
-
                         this.setState(
                             () => ({
                                 searchResults
@@ -32,11 +31,8 @@ class Search extends Component {
                         this.setState(
                             () => ({
                                 searchResults: []
-                            }
-                            ))
-
+                            }))
                     }
-
                 }
             )
     }
@@ -44,7 +40,7 @@ class Search extends Component {
     handleSearchChange = (e, bookId) => {
         const currentvalue = e.target.value;
         this.setState((currentSate) => {
-            const searchResults = [...currentSate.searchResults];
+            const searchResults = currentSate.searchResults;
             const book = searchResults.find(book => book.id === bookId);
             book.shelf = currentvalue
             BooksAPI.update(book, book.shelf)
@@ -56,9 +52,7 @@ class Search extends Component {
 
 
     render() {
-
         const { searchResults, query } = this.state
-
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -78,15 +72,13 @@ class Search extends Component {
 
                             onChange={(event) => this.updateQuery(event.target.value)} />
 
-
-
                     </div>
                 </div>
 
                 <div className="search-books-results">
                     <ol className="books-grid">
 
-                        {searchResults.map((c) => <Book key={c.id} book={c} onChange={this.handleSearchChange} />)
+                        {searchResults.map((book) => <Book key={book.id} book={book} onChange={this.handleSearchChange} />)
                         }
 
                     </ol>
